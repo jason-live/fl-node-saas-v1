@@ -8,16 +8,16 @@ export default (appInfo: EggAppInfo) => {
   config.keys = appInfo.name + '_1560580559116_7437';
 
   // add your egg config in here
-  config.middleware = [];
+  config.middleware = [ 'loggerReq', 'response', 'exception', 'loggerRes' ];
 
-  // add your special config in here
-  const bizConfig = {
-    sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
+  // cors
+  config.cors = {
+    credentials: true,
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   };
 
   // the return config will combines to EggAppConfig
   return {
     ...config,
-    ...bizConfig,
   };
 };

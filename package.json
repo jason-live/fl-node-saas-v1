@@ -13,7 +13,7 @@
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
     "test-local": "egg-bin test",
-    "test": "npm run lint -- --fix && npm run test-local",
+    "test": "npm run test-local",
     "cov": "egg-bin cov",
     "tsc": "ets && tsc -p tsconfig.json",
     "ci": "npm run lint && npm run cov && npm run tsc",
@@ -22,8 +22,15 @@
     "clean": "ets clean"
   },
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "egg": "^2.6.1",
-    "egg-scripts": "^2.6.0"
+    "egg-cors": "^2.2.0",
+    "egg-mysql": "^3.0.0",
+    "egg-scripts": "^2.6.0",
+    "egg-validate": "^2.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "wci-durian": "^1.0.9",
+    "wci-router": "^1.0.2"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.40",

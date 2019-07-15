@@ -28,14 +28,5 @@ export default () => {
     agent: false,
   };
 
-  // security
-  config.security = {
-    csrf: {
-      enable: false,
-      ignoreJSON: false,
-    },
-    domainWhiteList: [ 'http://127.0.0.1:8032' ],
-  };
-
   return config;
 };
