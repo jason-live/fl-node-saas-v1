@@ -65,7 +65,31 @@ class SignInDto {
   };
 }
 
+/**
+ * 登出
+ * @class SignOutDto
+ */
+class SignOutDto {
+/**
+ * 账号
+ * @type {string}
+ * @memberof SignInDto
+ */
+  account: string;
+
+  /**
+   * 参数校验
+   * @static
+   * @type {object}
+   * @memberof SignInDto
+   */
+  static sginOutRule: object = {
+    account: 'string',
+  };
+}
+
 export {
   SignUpDto,
   SignInDto,
+  SignOutDto,
 };
