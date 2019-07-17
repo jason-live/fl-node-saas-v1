@@ -14,13 +14,12 @@ function Middleware(): any {
         data: null,
       };
       if (err.logicno) {
-        ctx.logger.error('-> logic_exception: %j', err);
         status = 206;
         ctx.body = {
           code: err.logicno,
           msg: err.message,
           des: err.des,
-          data: null,
+          data: err.data || null,
         };
       }
       ctx.status = status;
