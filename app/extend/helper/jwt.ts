@@ -1,5 +1,5 @@
 import { sign, verify } from 'jsonwebtoken';
-import UserEntity from '../../entity/oper/user';
+import AccountEntity from '../../entity/oper/account';
 
 class Jwt {
   static JWT_NAME = 'jwt';
@@ -12,17 +12,18 @@ class Jwt {
    * @returns
    * @memberof Jwt
    */
-  static initPassportJwt(user: UserEntity) {
+  static initPassportJwt(account: AccountEntity) {
     // 要生成token的主题信息
     const content = {
-      _id: user.id,
-      name: user.username,
+      _id: account.id,
+      _user: account.user_id,
+      _account: account.account,
       iss: 'FL_SAAS',
-      sub: user.id,
-      aud: user.id,
-      nbf: Math.floor(Date.now() / 1000) + 10,
-      iat: Math.floor(Date.now() / 1000) + 10,
-      exp: Math.floor(Date.now() / 1000) + 10,
+      sub: account.user_id,
+      aud: account.user_id,
+      nbf: Math.floor(Date.now() / 1000),
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + (60 * 60),
     };
     // 这是加密的key（密钥);
     // 生成token
@@ -61,7 +62,26 @@ class Jwt {
         signed: false,
       });
       const payload = await verify(token, Jwt.secret);
-      return payload._id;
+      return payload._user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * 获取jwt账号
+   * @static
+   * @param {*} ctx
+   * @returns
+   * @memberof Jwt
+   */
+  static async getPassportJwtAccount(ctx: any) {
+    try {
+      const token = ctx.cookies.get(Jwt.JWT_NAME, {
+        signed: false,
+      });
+      const payload = await verify(token, Jwt.secret);
+      return payload._account;
     } catch (error) {
       throw error;
     }

@@ -10,12 +10,6 @@ export default (appInfo: EggAppInfo) => {
   // add your egg config in here
   config.middleware = [ 'loggerReq', 'response', 'exception', 'loggerRes' ];
 
-  // cors
-  config.cors = {
-    credentials: true,
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
-  };
-
   // the return config will combines to EggAppConfig
   return {
     ...config,

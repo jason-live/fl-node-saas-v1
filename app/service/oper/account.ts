@@ -1,12 +1,11 @@
 import { Service } from 'egg';
 import { compareSync, genSaltSync, hashSync } from 'bcrypt';
-import * as moment from 'moment';
-import { SignUpDto, SignInDto, SignOutDto } from '../../dto/oper/account';
+import { SignUpDto, SignInDto, SignOutDto, ChangePasswordDto } from '../../dto/oper/account';
 import Database from '../../db/database';
 import Schema from '../../db/schema';
 import AccountEntity from '../../entity/oper/account';
-import UserEntity from '../../entity/oper/user';
-import { CommonError, AccountError } from '../../err/oper';
+import { AccountError, CommonError } from '../../err';
+import { DbException } from '../../exception';
 
 /**
  * 账号相关
@@ -20,7 +19,7 @@ class Account extends Service {
    * @private
    * @memberof Account
    */
-  private connection = this.app.mysql.get(Database.FL_SAAS_OPER);
+  private connection = this.app.mysql.get(Database.FL_SAAS);
 
   /**
    * 用户注册
@@ -29,28 +28,29 @@ class Account extends Service {
    * @memberof Account
    */
   public async signUp(signUpDto: SignUpDto) {
-    return await this.connection.beginTransactionScope(async conn => {
-      // 添加用户
-      const userId = `${moment().format('x')}${this.ctx.helper.random.randomNumber(3)}`;
-      try {
-        await conn.insert(Schema.FSO_USER, {
+    try {
+      return await this.connection.beginTransactionScope(async conn => {
+        // 添加用户
+        const userInsert = await conn.insert(Schema.FSO_USER, {
           username: signUpDto.username,
           mobile: signUpDto.account,
-          id: userId,
         });
-      } catch (error) {
-        this.ctx.throw(CommonError.DATABASE_ERROR);
+        await conn.insert(Schema.FSO_ACCOUNT, {
+          account: signUpDto.account,
+          password: hashSync(signUpDto.password, genSaltSync(10)),
+          user_id: userInsert.insertId,
+        });
+        return {
+          account: signUpDto.account,
+        };
+      }, this.ctx);
+    } catch (error) {
+      if (error.errno === DbException.erDupEntryError) {
+        this.ctx.throw(AccountError.ACCOUNT_UNEMPTY_ERROR);
+        return;
       }
-      // 添加账号
-      const accountId = `${moment().format('x')}${this.ctx.helper.random.randomNumber(3)}`;
-      await conn.insert(Schema.FSO_ACCOUNT, {
-        account: signUpDto.account,
-        password: hashSync(signUpDto.password, genSaltSync(10)),
-        id: accountId,
-        user_id: userId,
-      });
-      return await conn.get(Schema.FSO_USER, { id: userId });
-    }, this.ctx);
+      this.ctx.throw(CommonError.DATABASE_ERROR);
+    }
   }
 
   /**
@@ -72,19 +72,17 @@ class Account extends Service {
     if (!isMatch) {
       this.ctx.throw(AccountError.ACCOUNT_PASSWORD_ERROR);
     }
-    // 查询用户
-    const user: UserEntity = await this.connection.get(Schema.FSO_USER, {
-      id: account.user_id,
-    });
     // 生成jwt
-    const token = this.ctx.helper.jwt.initPassportJwt(user);
+    const token = await this.ctx.helper.jwt.initPassportJwt(account);
     // 添加至 cookie
-    this.ctx.cookies.set(this.ctx.helper.jwt.JWT_NAME, token, {
+    await this.ctx.cookies.set(this.ctx.helper.jwt.JWT_NAME, token, {
       httpOnly: true,
       signed: false,
       encrypt: false,
     });
-    return user;
+    return {
+      account: account.account,
+    };
   }
 
   /**
@@ -101,7 +99,45 @@ class Account extends Service {
     if (!account) {
       this.ctx.throw(AccountError.ACCOUNT_EMPTY_ERROR);
     }
-    return signOutDto;
+    return {
+      account: account.account,
+    };
+  }
+
+  /**
+   * 修改密码
+   * @param {ChangePasswordDto} changePasswordDto
+   * @param {string} accountId
+   * @memberof Account
+   */
+  public async changePassword(changePasswordDto: ChangePasswordDto, account: string) {
+    this.ctx.logger.info(account);
+    // 查询账号是否存在
+    const accountResult: AccountEntity = await this.connection.get(Schema.FSO_ACCOUNT, {
+      account,
+    });
+    if (!accountResult) {
+      this.ctx.throw(AccountError.ACCOUNT_PASSWORD_ERROR);
+    }
+    // 校验密码是否正确
+    const isMatch = compareSync(changePasswordDto.oldPassword, accountResult.password);
+    if (!isMatch) {
+      this.ctx.throw(AccountError.ACCOUNT_PASSWORD_ERROR);
+    }
+    try {
+      // 修改密码
+      await this.connection.beginTransactionScope(async conn => {
+        await conn.update(Schema.FSO_ACCOUNT, {
+          id: accountResult.id,
+          password: hashSync(changePasswordDto.newPassword, genSaltSync(10)),
+        });
+      }, this.ctx);
+    } catch (error) {
+      this.ctx.throw(CommonError.DATABASE_ERROR);
+    }
+    return {
+      account: accountResult.account,
+    };
   }
 }
 

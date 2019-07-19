@@ -4,61 +4,61 @@ class User {
    * @type {number}
    * @memberof User
    */
-  id?: number;
+  id: number;
   /**
    * 用户名
    * @type {string}
    * @memberof User
    */
-  username?: string;
+  username: string;
   /**
    * 手机号
    * @type {string}
    * @memberof User
    */
-  mobile?: string;
+  mobile: string;
   /**
    * 邮箱
    * @type {string}
    * @memberof User
    */
-  email?: string;
+  email: string;
   /**
    * 是否禁用
    * @type {number}
    * @memberof User
    */
-  disabled?: number;
+  is_disabled: number;
   /**
    * 创建时间
    * @type {string}
    * @memberof User
    */
-  create_time?: string;
+  gmt_create: string;
   /**
    * 更新时间
    * @type {string}
    * @memberof User
    */
-  update_time?: string;
+  gmt_modified: string;
   /**
    * 创建人
    * @type {string}
    * @memberof User
    */
-  create_by?: string;
+  sub_create: string;
   /**
    * 更新人
    * @type {string}
    * @memberof User
    */
-  update_by?: string;
+  sub_modified: string;
   /**
    * 删除标示
    * @type {string}
    * @memberof User
    */
-  deleted?: string;
+  is_deleted: string;
 }
 
 export default User;

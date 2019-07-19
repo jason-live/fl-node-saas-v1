@@ -8,19 +8,19 @@ class SignUpDto {
    * @type {string}
    * @memberof SignUpDto
    */
-  username: string;
+  username: string = '';
   /**
    * 账号
    * @type {string}
    * @memberof SignUpDto
    */
-  account: string;
+  account: string = '';
   /**
    * 密码
    * @type {string}
    * @memberof SignUpDto
    */
-  password: string;
+  password: string = '';
 
   /**
    * 参数校验
@@ -28,7 +28,7 @@ class SignUpDto {
    * @type {object}
    * @memberof SignUpDto
    */
-  static signUpRule: object = {
+  static rule: object = {
     username: 'string',
     account: 'string',
     password: 'string',
@@ -45,13 +45,13 @@ class SignInDto {
    * @type {string}
    * @memberof SignInDto
    */
-  account: string;
+  account: string = '';
   /**
    * 密码
    * @type {string}
    * @memberof SignInDto
    */
-  password: string;
+  password: string = '';
 
   /**
    * 参数校验
@@ -59,7 +59,7 @@ class SignInDto {
    * @type {object}
    * @memberof SignInDto
    */
-  static sginInRule: object = {
+  static rule: object = {
     account: 'string',
     password: 'string',
   };
@@ -75,7 +75,7 @@ class SignOutDto {
  * @type {string}
  * @memberof SignInDto
  */
-  account: string;
+  account: string = '';
 
   /**
    * 参数校验
@@ -83,8 +83,39 @@ class SignOutDto {
    * @type {object}
    * @memberof SignInDto
    */
-  static sginOutRule: object = {
+  static rule: object = {
     account: 'string',
+  };
+}
+
+/**
+ * 修改密码
+ * @class ChangePasswordDto
+ */
+class ChangePasswordDto {
+  /**
+   * 原密码
+   * @type {string}
+   * @memberof ChangePasswordDto
+   */
+  oldPassword: string = '';
+
+  /**
+   * 新密码
+   * @type {string}
+   * @memberof ChangePasswordDto
+   */
+  newPassword: string = '';
+
+  /**
+   * 参数校验
+   * @static
+   * @type {object}
+   * @memberof ChangePasswordDto
+   */
+  static rule: object = {
+    oldPassword: 'string',
+    newPassword: 'string',
   };
 }
 
@@ -92,4 +123,5 @@ export {
   SignUpDto,
   SignInDto,
   SignOutDto,
+  ChangePasswordDto,
 };
