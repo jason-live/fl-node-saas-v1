@@ -7,7 +7,7 @@ export default () => {
   config.cluster = {
     listen: {
       port: 7002,
-      hostname: '192.168.1.246',
+      hostname: '127.0.0.1',
     },
   };
 
@@ -48,7 +48,7 @@ export default () => {
       enable: false,
       ignoreJSON: true,
     },
-    domainWhiteList: [ 'http://127.0.0.1:8051', 'http://localhost:8051' ],
+    domainWhiteList: [ 'http://127.0.0.1:8032', 'http://localhost:8051' ],
   };
 
   return config;
