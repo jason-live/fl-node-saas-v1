@@ -3,6 +3,14 @@ import { EggAppConfig, PowerPartial } from 'egg';
 export default () => {
   const config: PowerPartial<EggAppConfig> = {};
 
+  // 启动
+  config.cluster = {
+    listen: {
+      port: 7002,
+      hostname: '192.168.1.246',
+    },
+  };
+
   // mysql
   config.mysql = {
     // 单数据库信息配置
@@ -28,13 +36,19 @@ export default () => {
     agent: false,
   };
 
+  // cors
+  config.cors = {
+    credentials: true,
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+  };
+
   // security
   config.security = {
     csrf: {
       enable: false,
-      ignoreJSON: false,
+      ignoreJSON: true,
     },
-    domainWhiteList: [ 'http://127.0.0.1:8032' ],
+    domainWhiteList: [ 'http://127.0.0.1:8051', 'http://localhost:8051' ],
   };
 
   return config;

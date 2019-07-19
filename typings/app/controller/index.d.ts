@@ -3,17 +3,13 @@
 
 import 'egg';
 import ExportOperAccount from '../../../app/controller/oper/account';
-import ExportSaasAccount from '../../../app/controller/saas/account';
-import ExportSaasUser from '../../../app/controller/saas/user';
+import ExportOperUser from '../../../app/controller/oper/user';
 
 declare module 'egg' {
   interface IController {
     oper: {
       account: ExportOperAccount;
-    }
-    saas: {
-      account: ExportSaasAccount;
-      user: ExportSaasUser;
+      user: ExportOperUser;
     }
   }
 }

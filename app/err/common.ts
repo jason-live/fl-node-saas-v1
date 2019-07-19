@@ -9,7 +9,7 @@ class CommonError {
   /**
    * 最大值
    * @static
-   * @memberof AccountError
+   * @memberof CommonError
    */
   static maxScope = 10100;
 
@@ -29,9 +29,9 @@ class CommonError {
    * @static
    * @memberof CommonError
    */
-  static BODY_PARAMS_ERROR = {
+  static REQUEST_BODY_PARAMS_ERROR = {
     logicno: 10011,
-    message: 'body_params_error',
+    message: 'request_body_params_error',
     des: '服务异常',
   };
 }

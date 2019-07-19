@@ -3,35 +3,35 @@ class AddUserDto {
    * @type {string}
    * @memberof addUserDto
    */
-  username: string;
+  username: string = '';
 
   /**
    * 手机号
    * @type {string}
    * @memberof addUserDto
    */
-  mobile: string;
+  mobile: string = '';
 
   /**
    * 密码
    * @type {string}
    * @memberof addUserDto
    */
-  password: string;
+  password: string = '';
 
   /**
    * 邮箱
    * @type {string}
    * @memberof AddUserDto
    */
-  email?: string;
+  email?: string = '';
 
   /**
    * 校验规则
    * @static
    * @memberof AddUserDto
    */
-  static addUserRule = {
+  static rule = {
     username: 'string',
     mobile: {
       type: 'string',
@@ -44,6 +44,38 @@ class AddUserDto {
   };
 }
 
+/**
+ * 更新用户
+ * @class UpdateUserDto
+ */
+class UpdateUserDto {
+  /**
+   * 用户名
+   * @type {string}
+   * @memberof UpdateUserDto
+   */
+  username: string = '';
+
+  /**
+   * 邮箱
+   * @type {string}
+   * @memberof UpdateUserDto
+   */
+  email: string = '';
+
+  /**
+   * 校验规则
+   * @static
+   * @type {object}
+   * @memberof UpdateUserDto
+   */
+  static rule: object = {
+    username: 'string?',
+    email: 'email?',
+  };
+}
+
 export {
   AddUserDto,
+  UpdateUserDto,
 };
