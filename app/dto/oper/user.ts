@@ -75,7 +75,35 @@ class UpdateUserDto {
   };
 }
 
+class UpdateUserDisableDto {
+  /**
+   * 用户ID
+   * @type {number}
+   * @memberof UpdateUserDisableDto
+   */
+  user_id: number = 0;
+
+  /**
+   * 状态
+   * @type {number}
+   * @memberof UpdateUserDisableDto
+   */
+  is_disabled: number = 0;
+
+  /**
+   * 参数校验
+   * @static
+   * @type {object}
+   * @memberof UpdateUserDisableDto
+   */
+  static rule: object = {
+    user_id: 'number',
+    is_disabled: [ 0, 1 ],
+  };
+}
+
 export {
   AddUserDto,
   UpdateUserDto,
+  UpdateUserDisableDto,
 };
