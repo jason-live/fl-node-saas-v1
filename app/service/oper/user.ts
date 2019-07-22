@@ -1,9 +1,10 @@
 import { Service } from 'egg';
+import { map } from 'lodash';
 import { genSaltSync, hashSync } from 'bcrypt';
-import { AddUserDto, UpdateUserDto } from '../../dto/oper/user';
+import { AddUserDto, UpdateUserDto, UpdateUserDisableDto } from '../../dto/oper/user';
 import Database from '../../db/database';
 import Schema from '../../db/schema';
-import { CommonError, AccountError } from '../../err';
+import { CommonError, AccountError, UserError } from '../../err';
 import { DbException } from '../../exception';
 import { UserEnum } from '../../enum';
 import UserEntity from '../../entity/oper/user';
@@ -58,10 +59,8 @@ class User extends Service {
    * @returns
    * @memberof User
    */
-  public async getUser(userId: string) {
-    const user: UserEntity = await this.connection.get(Schema.FSO_USER, {
-      id: userId,
-    });
+  public async getUser(userId: number) {
+    const user: UserEntity = await this.queryUser(userId);
     return {
       ...user,
       is_disable_value: UserEnum.disabled[user.is_disabled],
@@ -74,6 +73,7 @@ class User extends Service {
    * @memberof User
    */
   public async updateUser(updateUserDto: UpdateUserDto, userId: number) {
+    await this.queryUser(userId);
     await this.connection.beginTransactionScope(async conn => {
       try {
         await conn.update(Schema.FSO_USER, {
@@ -87,6 +87,77 @@ class User extends Service {
     const user = this.connection.get(Schema.FSO_USER, {
       id: userId,
     });
+    return user;
+  }
+
+  /**
+   * 禁用/启用用户
+   * @param {number} userId
+   * @param {number} disabled
+   * @returns
+   * @memberof User
+   */
+  public async updateUserDisabled(updateUserDisableDto: UpdateUserDisableDto) {
+    await this.queryUser(updateUserDisableDto.user_id);
+    await this.connection.beginTransactionScope(async conn => {
+      try {
+        await conn.update(Schema.FSO_USER, {
+          id: updateUserDisableDto.user_id,
+          is_disabled: updateUserDisableDto.is_disabled,
+        });
+      } catch (error) {
+        this.ctx.throw(CommonError.DATABASE_ERROR);
+      }
+    }, this.ctx);
+    const user = this.connection.get(Schema.FSO_USER, {
+      id: updateUserDisableDto.user_id,
+    });
+    return user;
+  }
+
+  /**
+   * 分页查询用户列表
+   * @param {number} pageSize
+   * @param {number} pageNum
+   * @returns
+   * @memberof User
+   */
+  public async getUserListPageable(pageNum: number, pageSize: number): Promise<any> {
+    let results = {};
+    const limit = (pageNum - 1) * pageSize;
+    const offset = pageSize * 1;
+    results = {
+      pageSize: pageSize * 1,
+      pageNum: pageNum * 1,
+      list: map(await this.connection.select(Schema.FSO_USER, {
+        limit,
+        offset,
+        orders: [[ 'gmt_create', 'desc' ]],
+      }), value => {
+        return {
+          ...value,
+        };
+      }),
+      total: await this.connection.count(Schema.FSO_USER),
+    };
+    return results;
+  }
+
+  /**
+   * 查询用户
+   * @private
+   * @param {number} userId
+   * @returns
+   * @memberof User
+   */
+  private async queryUser(userId: number) {
+    const user: UserEntity = await this.connection.get(Schema.FSO_USER, {
+      id: userId,
+    });
+    // 用户不存在
+    if (!user) {
+      this.ctx.throw(UserError.USER_EMPTY_ERROR);
+    }
     return user;
   }
 }

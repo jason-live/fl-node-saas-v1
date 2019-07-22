@@ -29,9 +29,9 @@ class ValidateRequestBody extends WciDurianInterceptor {
    * @memberof ValidateRequestBody
    */
   async handleBody(ctx: any, wapper: any) {
-    const { body } = ctx.request;
     const keys: string[] = [];
     const dto = new wapper();
+    const { body } = ctx.request;
     for (const key in dto) {
       keys.push(key);
     }

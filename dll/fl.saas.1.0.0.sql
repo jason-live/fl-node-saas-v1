@@ -251,10 +251,6 @@ CREATE TABLE fs_brand (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='品牌表';
 
 
-
-
-
-
 -- ----------------------------
 --  Table structure for `fs_demand`
 --  需求
@@ -264,7 +260,6 @@ CREATE TABLE fs_brand (
 --  Table structure for `fs_bill`
 --  单据
 -- ----------------------------
-
 
 
 -- ----------------------------
