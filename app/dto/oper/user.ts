@@ -76,12 +76,6 @@ class UpdateUserDto {
 }
 
 class UpdateUserDisableDto {
-  /**
-   * 用户ID
-   * @type {number}
-   * @memberof UpdateUserDisableDto
-   */
-  user_id: number = 0;
 
   /**
    * 状态
@@ -97,7 +91,6 @@ class UpdateUserDisableDto {
    * @memberof UpdateUserDisableDto
    */
   static rule: object = {
-    user_id: 'number',
     is_disabled: [ 0, 1 ],
   };
 }
