@@ -122,7 +122,7 @@ class User extends Service {
    * @returns
    * @memberof User
    */
-  public async getUserListPageable(pageNum: number, pageSize: number): Promise<any> {
+  public async getUserListPageable(pageNum: number = 1, pageSize: number = 10): Promise<any> {
     let results = {};
     const pageable = this.ctx.helper.pageable.pageHelper(pageNum, pageSize);
     results = {
