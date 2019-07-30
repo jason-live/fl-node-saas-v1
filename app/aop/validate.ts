@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+// import { isEmpty, isObject } from 'lodash';
 import { WciDurianInterceptor } from 'wci-durian';
 import { CommonError } from '../err';
 
@@ -36,7 +36,10 @@ class ValidateRequestBody extends WciDurianInterceptor {
       keys.push(key);
     }
     for (const key in body) {
-      if ((keys.indexOf(key) < 0) || isEmpty(body[key])) {
+      if ((keys.indexOf(key) < 0)) {
+        delete body[key];
+      }
+      if (body[key] === undefined || body[key] === null) {
         delete body[key];
       }
     }

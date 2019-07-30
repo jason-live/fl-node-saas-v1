@@ -32,7 +32,7 @@ class User extends Service {
         userInsert = await conn.insert(Schema.FSO_USER, {
           username: addUserDto.username,
           mobile: addUserDto.mobile,
-          email: addUserDto.email || '' ,
+          email: addUserDto.email,
         });
       } catch (error) {
         if (error.errno === DbException.erDupEntryError) {

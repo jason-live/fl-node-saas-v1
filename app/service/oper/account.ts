@@ -111,7 +111,6 @@ class Account extends Service {
    * @memberof Account
    */
   public async changePassword(changePasswordDto: ChangePasswordDto, account: string) {
-    this.ctx.logger.info(account);
     // 查询账号是否存在
     const accountResult: AccountEntity = await this.connection.get(Schema.FSO_ACCOUNT, {
       account,

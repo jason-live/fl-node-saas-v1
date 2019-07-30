@@ -46,7 +46,7 @@ export default () => {
   config.security = {
     csrf: {
       enable: false,
-      ignoreJSON: true,
+      ignoreJSON: false,
     },
     domainWhiteList: [ 'http://127.0.0.1:8032', 'http://localhost:8051' ],
   };

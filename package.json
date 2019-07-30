@@ -29,7 +29,7 @@
     "egg-scripts": "^2.6.0",
     "egg-validate": "^2.0.2",
     "jsonwebtoken": "^8.5.1",
-    "wci-durian": "^1.0.9",
+    "wci-durian": "^1.0.12",
     "wci-router": "^1.0.2"
   },
   "devDependencies": {

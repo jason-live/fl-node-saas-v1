@@ -88,11 +88,13 @@ class User extends Controller {
    * @memberof User
    */
   @Put('/:id/disable')
+  @Validate(UpdateUserDisableDto)
   @Passport()
   public async updateUserDisabled(
-    @RequestPath({ value: 'id', require: true }) id: number,
     @RequestBody('body') updateUserDisableDto: UpdateUserDisableDto,
+    @RequestPath({ value: 'id', require: true }) id: number,
   ): Promise<any> {
+    this.logger.info('22222222');
     return await this.ctx.service.oper.user.updateUserDisabled(updateUserDisableDto, id);
   }
 }
