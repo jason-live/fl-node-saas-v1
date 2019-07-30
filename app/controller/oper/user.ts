@@ -86,12 +86,13 @@ class User extends Controller {
    * @returns {Promise<any>}
    * @memberof User
    */
-  @Put('/disable')
+  @Put('/:id/disable')
   @Passport()
   public async updateUserDisabled(
+    @RequestPath({ value: 'id', require: true }) id: number,
     @RequestBody('body') updateUserDisableDto: UpdateUserDisableDto,
   ): Promise<any> {
-    return await this.ctx.service.oper.user.updateUserDisabled(updateUserDisableDto);
+    return await this.ctx.service.oper.user.updateUserDisabled(updateUserDisableDto, id);
   }
 }
 

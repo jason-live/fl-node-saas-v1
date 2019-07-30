@@ -97,12 +97,12 @@ class User extends Service {
    * @returns
    * @memberof User
    */
-  public async updateUserDisabled(updateUserDisableDto: UpdateUserDisableDto) {
-    await this.queryUser(updateUserDisableDto.user_id);
+  public async updateUserDisabled(updateUserDisableDto: UpdateUserDisableDto, userId: number) {
+    await this.queryUser(userId);
     await this.connection.beginTransactionScope(async conn => {
       try {
         await conn.update(Schema.FSO_USER, {
-          id: updateUserDisableDto.user_id,
+          id: userId,
           is_disabled: updateUserDisableDto.is_disabled,
         });
       } catch (error) {
@@ -110,7 +110,7 @@ class User extends Service {
       }
     }, this.ctx);
     const user = this.connection.get(Schema.FSO_USER, {
-      id: updateUserDisableDto.user_id,
+      id: userId,
     });
     return user;
   }
@@ -124,16 +124,14 @@ class User extends Service {
    */
   public async getUserListPageable(pageNum: number, pageSize: number): Promise<any> {
     let results = {};
-    const limit = (pageNum - 1) * pageSize;
-    const offset = pageSize * 1;
+    const pageable = this.ctx.helper.pageable.pageHelper(pageNum, pageSize);
     results = {
-      pageSize: pageSize * 1,
-      pageNum: pageNum * 1,
+      pageSize,
+      pageNum,
       list: map(await this.connection.select(Schema.FSO_USER, {
-        limit,
-        offset,
+        ...pageable,
         orders: [[ 'gmt_create', 'desc' ]],
-      }), value => {
+      }), (value: any) => {
         return {
           ...value,
         };
