@@ -25,6 +25,7 @@ class User extends Controller {
   /**
    * 修改用户
    * @param {UpdateUserDto} updateUserDto
+   * @param {number} id
    * @returns {Promise<any>}
    * @memberof User
    */
@@ -48,8 +49,8 @@ class User extends Controller {
   @Get('')
   @Passport()
   public async getUserListPageable(
-    @RequestQuery({ value: 'pageNum', require: true }) pageNum: number,
-    @RequestQuery({ value: 'pageSize', require: true }) pageSize: number,
+    @RequestQuery('pageNum') pageNum: number,
+    @RequestQuery('pageSize') pageSize: number,
   ) {
     return await this.ctx.service.oper.user.getUserListPageable(pageNum, pageSize);
   }
