@@ -22,7 +22,7 @@
     "clean": "ets clean"
   },
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "egg": "^2.6.1",
     "egg-cors": "^2.2.0",
     "egg-mysql": "^3.0.0",
