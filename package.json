@@ -28,7 +28,7 @@
     "egg-mysql": "^3.0.0",
     "egg-scripts": "^2.6.0",
     "egg-validate": "^2.0.2",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "wci-durian": "^1.0.9",
     "wci-router": "^1.0.2"
   },
